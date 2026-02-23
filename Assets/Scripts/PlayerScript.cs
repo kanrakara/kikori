@@ -87,7 +87,7 @@ public class PlayerScript : MonoBehaviour
         // アタックボタンが押された瞬間、かつ、エリア内にいる時だけ実行
         if (value.isPressed && isInArea && currentTarget != null)
         {
-            TreeTopGimmick gimmick = currentTarget.GetComponent<TreeTopGimmick>();
+            TreeGimmick gimmick = currentTarget.GetComponentInParent<TreeGimmick>();
             if (gimmick != null)
             {
                 // 接触している相手の「レイヤー番号」を引数として渡す

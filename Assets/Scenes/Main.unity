@@ -539,12 +539,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 410742622}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.32, y: 0, z: 0}
-  m_LocalScale: {x: -8, y: 6.5, z: 6.5}
+  m_LocalRotation: {x: -0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1412612763}
+  m_Father: {fileID: 862280434}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!331 &410742624
 SpriteMask:
@@ -631,10 +631,11 @@ Transform:
   m_GameObject: {fileID: 556820812}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.33, y: 0, z: 0}
+  m_LocalPosition: {x: -0.77, y: 0, z: 0}
   m_LocalScale: {x: 8, y: 6.5, z: 6.5}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1877226104}
   m_Father: {fileID: 572199750}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!331 &556820814
@@ -751,6 +752,7 @@ GameObject:
   m_Component:
   - component: {fileID: 572199750}
   - component: {fileID: 572199749}
+  - component: {fileID: 572199751}
   m_Layer: 0
   m_Name: TreeTop
   m_TagString: Untagged
@@ -834,6 +836,18 @@ Transform:
   - {fileID: 862280434}
   m_Father: {fileID: 891003819}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &572199751
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 572199748}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 510a0012a2808d94093f3ed96d6182de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
 --- !u!1 &577577020
 GameObject:
   m_ObjectHideFlags: 0
@@ -1497,10 +1511,11 @@ Transform:
   m_GameObject: {fileID: 862280433}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.32, y: 0, z: 0}
+  m_LocalPosition: {x: 0.77, y: 0, z: 0}
   m_LocalScale: {x: -8, y: 6.5, z: 6.5}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 410742623}
   m_Father: {fileID: 572199750}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!331 &862280435
@@ -1571,6 +1586,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 891003819}
+  - component: {fileID: 891003820}
   m_Layer: 0
   m_Name: TreeObject
   m_TagString: Untagged
@@ -1597,6 +1613,24 @@ Transform:
   - {fileID: 1768220309}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &891003820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 891003816}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 135957114535ba943a5642b00e120e95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  maskObjectLeft: {fileID: 556820812}
+  maskObjectRight: {fileID: 862280433}
+  leftShift: -0.76
+  rightShift: 0.77
+  currentHp: 100
+  maxMoveDistance: 0.94
 --- !u!1 &973302364
 GameObject:
   m_ObjectHideFlags: 0
@@ -1890,6 +1924,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1412612763}
   - component: {fileID: 1412612762}
+  - component: {fileID: 1412612764}
   m_Layer: 0
   m_Name: TreeBottom
   m_TagString: Untagged
@@ -1968,11 +2003,21 @@ Transform:
   m_LocalPosition: {x: 0, y: -3.3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1877226104}
-  - {fileID: 410742623}
+  m_Children: []
   m_Father: {fileID: 891003819}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1412612764
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1412612761}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e3d6da24455a994ba1ffc9dd9a6b75b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
 --- !u!1 &1563570713
 GameObject:
   m_ObjectHideFlags: 0
@@ -2075,7 +2120,7 @@ GameObject:
   - component: {fileID: 1768220309}
   - component: {fileID: 1768220310}
   - component: {fileID: 1768220311}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: RightCollider
   m_TagString: Tree
   m_Icon: {fileID: 0}
@@ -2295,6 +2340,50 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 10}
   m_EdgeRadius: 0
+--- !u!1 &1830804260
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1830804262}
+  - component: {fileID: 1830804261}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1830804261
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1830804260}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: befdd96ce3a021f4cb3a9aa66cb824b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+--- !u!4 &1830804262
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1830804260}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1877226103
 GameObject:
   m_ObjectHideFlags: 0
@@ -2321,11 +2410,11 @@ Transform:
   m_GameObject: {fileID: 1877226103}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.33, y: 0, z: 0}
-  m_LocalScale: {x: 8, y: 6.5, z: 6.5}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1412612763}
+  m_Father: {fileID: 556820813}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!331 &1877226105
 SpriteMask:
@@ -2397,7 +2486,7 @@ GameObject:
   - component: {fileID: 1889500113}
   - component: {fileID: 1889500114}
   - component: {fileID: 1889500115}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: LeftCollider
   m_TagString: Tree
   m_Icon: {fileID: 0}
@@ -2659,3 +2748,4 @@ SceneRoots:
   - {fileID: 1200979636}
   - {fileID: 577577023}
   - {fileID: 891003819}
+  - {fileID: 1830804262}
