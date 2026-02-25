@@ -12,20 +12,20 @@ public class TreeGimmick : MonoBehaviour
     public float leftShift;
     public float rightShift;
 
-    //スプライトマスクの現在の移動量
+    //スプライトマスクの移動した量
     private float nowOffsetLeft = 0.0f;
     private float nowOffsetRight = 0.0f;
 
-    // この木自身の現在の体力
+    // この木の現在の体力
     public float currentHp;
 
-    // 移動させる距離を調整できるようにする
+    // スプライトマスクを移動させる距離の最大値
     public float maxMoveDistance;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        // GameManagerで設定された最大体力を初期値として代入
+        // GameManagerで設定された木の最大体力を初期値として代入
         currentHp = GameManager.maxHp;
 
         if (maskObjectLeft != null)
@@ -43,21 +43,25 @@ public class TreeGimmick : MonoBehaviour
         // レイヤーの内容で条件分岐
         if (layerInt == LayerMask.NameToLayer("TreeLeft"))
         {
+            // maxMoveDistanceの45%が移動量の最大
             if (nowOffsetLeft > maxMoveDistance * 0.45f)
             {
-                //maskObjectRightを光らせる
+                // maskObjectRightを光らせる
                 return;
             }
             else if (maskObjectLeft != null)
             {
-                // ダメージ処理
+                // 木へのダメージ処理
                 currentHp -= GameManager.axePower;
+                // もしcurrentHPが0以下になったら、0になる
                 currentHp = Mathf.Max(currentHp, 0);
 
+                // スプライトマスクを移動させる
                 nowOffsetLeft += maxMoveDistance * (GameManager.axePower / GameManager.maxHp);
                 maskObjectLeft.transform.localPosition = new Vector3(nowOffsetLeft + leftShift, 0, 0);
             }
         }
+        // Leftと同様に
         else if (layerInt == LayerMask.NameToLayer("TreeRight"))
         {
             if (nowOffsetRight > maxMoveDistance * 0.45f)
@@ -67,7 +71,6 @@ public class TreeGimmick : MonoBehaviour
             }
             else if (maskObjectRight != null)
             {
-                // ダメージ処理
                 currentHp -= GameManager.axePower;
 
                 nowOffsetRight += maxMoveDistance * (GameManager.axePower / GameManager.maxHp);
@@ -75,7 +78,8 @@ public class TreeGimmick : MonoBehaviour
             }
         }
 
-        if (currentHp < GameManager.maxHp * 0.1f)
+        // ダメージが85%以上で、木が倒れる
+        if (currentHp < GameManager.maxHp * 0.15f)
         {
             Debug.Log("木が倒れました！");
         }

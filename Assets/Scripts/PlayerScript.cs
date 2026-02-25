@@ -3,16 +3,16 @@ using UnityEngine.InputSystem;
 
 public class PlayerScript : MonoBehaviour
 {
-    Rigidbody2D rbody;              // Rigidbody2D型の変数
+    Rigidbody2D rbody;              // Rigidbody2D型の変数（自身の定義用）
     public float speed = 3.0f;      // 移動速度
     private float axisH = 0.0f;     // x方向の入力
 
-    // 見た目を変えたい子オブジェクトのスプライトをインスペクターから入れる
-    public SpriteRenderer spriteRenderer;
-    private int activeOrder = 22;       // 接触中のレイヤー順序
+    private Animator animator;      // スプライト変更にAnimatorを使用する
+    public SpriteRenderer spriteRenderer;       // 見た目を変えたい子オブジェクトのスプライトをインスペクターから指定
+    private int activeOrder = 22;       // 伐採時のレイヤー順序
     private int defaultOrder = 18;      // 通常時のレイヤー順序
 
-    private bool isInArea = false; // エリア内にいるかどうかのフラグ
+    private bool isInArea = false;      // エリア内にいるかどうかのフラグ
     private GameObject currentTarget;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -20,6 +20,7 @@ public class PlayerScript : MonoBehaviour
     {
         // Rigidboody2Dを取ってくる
         rbody = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
     }
 
 
@@ -62,7 +63,10 @@ public class PlayerScript : MonoBehaviour
         // 接触した相手のタグを確認する
         if (other.CompareTag("Tree"))
         {
-            spriteRenderer.sortingOrder = activeOrder;
+            // Animatorの"Contact"トリガーを起動
+            animator.SetTrigger("Contact");
+            // 連続で離れた時のトリガーが残らないようリセット（念のため）
+            animator.ResetTrigger("Contactless");
             isInArea = true;
             // currentTarget に相手情報を取得
             currentTarget = other.gameObject;
@@ -74,7 +78,9 @@ public class PlayerScript : MonoBehaviour
     {
         if (other.CompareTag("Tree"))
         {
-            spriteRenderer.sortingOrder = defaultOrder;
+            // "Contactless"トリガーを起動してIdleに戻す
+            animator.SetTrigger("Contactless");
+            animator.ResetTrigger("Contact");
             isInArea = false;
             // 相手から離れたら、currentTargetを空にする
             currentTarget = null;
@@ -90,10 +96,10 @@ public class PlayerScript : MonoBehaviour
             TreeGimmick gimmick = currentTarget.GetComponentInParent<TreeGimmick>();
             if (gimmick != null)
             {
+                LoggingAction();
                 // 接触している相手の「レイヤー番号」を引数として渡す
                 int layer = currentTarget.layer;
                 gimmick.MaskGimmick(layer);
-                LoggingAction();
             }
         }
     }
