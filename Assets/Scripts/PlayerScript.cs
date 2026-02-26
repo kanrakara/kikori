@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
 
 public class PlayerScript : MonoBehaviour
 {
@@ -8,9 +9,10 @@ public class PlayerScript : MonoBehaviour
     private float axisH = 0.0f;     // x方向の入力
 
     private Animator animator;      // スプライト変更にAnimatorを使用する
-    public SpriteRenderer spriteRenderer;       // 見た目を変えたい子オブジェクトのスプライトをインスペクターから指定
-    private int activeOrder = 22;       // 伐採時のレイヤー順序
-    private int defaultOrder = 18;      // 通常時のレイヤー順序
+    public SpriteRenderer spriteRenderer;       // 見た目を変えたい子オブジェクトのスプライト（斧）をインスペクターから指定
+    private bool isLogging = false;     // アニメーション中かどうかのフラグ 
+    //private int activeOrder = 22;       // 伐採時のレイヤー順序
+    //private int defaultOrder = 18;      // 通常時のレイヤー順序
 
     private bool isInArea = false;      // エリア内にいるかどうかのフラグ
     private GameObject currentTarget;
@@ -27,6 +29,7 @@ public class PlayerScript : MonoBehaviour
     // InputSystem により、On + Actionsの名前で呼び出せる。
     public void OnMove(InputValue value)
     {
+        if (isLogging) return;      // 伐採中は移動入力を無視
         // 直接 Vector2 を受け取って、xの値を axisH に入れる
         axisH = value.Get<Vector2>().x;
     }
@@ -90,22 +93,38 @@ public class PlayerScript : MonoBehaviour
     // 木を切るアクション
     public void OnAttack(InputValue value)
     {
-        // アタックボタンが押された瞬間、かつ、エリア内にいる時だけ実行
-        if (value.isPressed && isInArea && currentTarget != null)
+        // アタックボタンが押された瞬間　＆　伐採中ではない ＆ エリア内 ＆ ターゲットあり
+        if (value.isPressed && !isLogging && isInArea && currentTarget != null)
         {
             TreeGimmick gimmick = currentTarget.GetComponentInParent<TreeGimmick>();
             if (gimmick != null)
             {
-                LoggingAction();
-                // 接触している相手の「レイヤー番号」を引数として渡す
-                int layer = currentTarget.layer;
-                gimmick.MaskGimmick(layer);
+                isLogging = true;
+                axisH = 0;      // 移動を止める
+                rbody.linearVelocity = new Vector2(0, rbody.linearVelocity.y);
+                // GameManagerのplayerPowerに応じてアニメーション速度を変更
+                animator.speed = GameManager.playerPower;
+                animator.SetTrigger("Swing");
             }
         }
     }
-
-    private void LoggingAction()
+    public void OnLogging()
     {
+        if (currentTarget != null)
+        {
+            TreeGimmick gimmick = currentTarget.GetComponentInParent<TreeGimmick>();
+            if (gimmick != null)
+            {
+                // 接触している相手の「レイヤー番号」を引数として渡す
+                gimmick.MaskGimmick(currentTarget.layer);
+            }
+        }
 
+    }
+    public void OnLoggingComplete()
+    {
+        // 状態をリセット
+        isLogging = false;
+        animator.speed = 1.0f; // 速度を元に戻す
     }
 }
