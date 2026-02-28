@@ -1,6 +1,6 @@
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UIElements;
 
 public class PlayerScript : MonoBehaviour
 {
@@ -11,9 +11,8 @@ public class PlayerScript : MonoBehaviour
     private Animator animator;      // スプライト変更にAnimatorを使用する
     public SpriteRenderer spriteRenderer;       // 見た目を変えたい子オブジェクトのスプライト（斧）をインスペクターから指定
     private bool isLogging = false;     // アニメーション中かどうかのフラグ 
-    //private int activeOrder = 22;       // 伐採時のレイヤー順序
-    //private int defaultOrder = 18;      // 通常時のレイヤー順序
 
+    public TreeGimmick treeGimmick;     // TreeGimmickの場所
     private bool isInArea = false;      // エリア内にいるかどうかのフラグ
     private GameObject currentTarget;
 
@@ -59,10 +58,9 @@ public class PlayerScript : MonoBehaviour
     }
 
     // 木に接近中の見た目を変更し、エリア内かの判定を加える
-    // コライダーに接触中
+    // コライダーに接触したら
     private void OnTriggerEnter2D(Collider2D other)
     {
-
         // 接触した相手のタグを確認する
         if (other.CompareTag("Tree"))
         {
@@ -96,15 +94,30 @@ public class PlayerScript : MonoBehaviour
         // アタックボタンが押された瞬間　＆　伐採中ではない ＆ エリア内 ＆ ターゲットあり
         if (value.isPressed && !isLogging && isInArea && currentTarget != null)
         {
-            TreeGimmick gimmick = currentTarget.GetComponentInParent<TreeGimmick>();
-            if (gimmick != null)
+            // マスクオブジェクトが規定の移動量を超えていれば（判定は向こうで行い済み）
+            if (treeGimmick.CheckOffsetLeft)
             {
-                isLogging = true;
-                axisH = 0;      // 移動を止める
-                rbody.linearVelocity = new Vector2(0, rbody.linearVelocity.y);
-                // GameManagerのplayerPowerに応じてアニメーション速度を変更
-                animator.speed = GameManager.playerPower;
-                animator.SetTrigger("Swing");
+                // maskObjectRightを光らせる
+                return;
+            }
+            else if (treeGimmick.CheckOffsetRight)
+            {
+                // maskObjectLeftを光らせる
+                return;
+            }
+            else
+            {
+                TreeGimmick gimmick = currentTarget.GetComponentInParent<TreeGimmick>();
+                if (gimmick != null)
+                {
+                    isLogging = true;
+                    axisH = 0;      // 移動を止める
+                    rbody.linearVelocity = new Vector2(0, rbody.linearVelocity.y);
+                    // GameManagerのplayerPowerに応じてアニメーション速度を変更
+                    animator.speed = GameManager.playerPower;
+                    // Swingアニメーションを起動
+                    animator.SetTrigger("Swing");
+                }
             }
         }
     }

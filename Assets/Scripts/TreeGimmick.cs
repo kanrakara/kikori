@@ -1,5 +1,3 @@
-using System.Runtime.CompilerServices;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class TreeGimmick : MonoBehaviour
@@ -8,11 +6,11 @@ public class TreeGimmick : MonoBehaviour
     public GameObject maskObjectLeft;
     public GameObject maskObjectRight;
 
-    //スプライトマスクの初期位置を指定
+    // スプライトマスクの初期位置を指定
     public float leftShift;
     public float rightShift;
 
-    //スプライトマスクの移動した量
+    // スプライトマスクの移動した量
     private float nowOffsetLeft = 0.0f;
     private float nowOffsetRight = 0.0f;
 
@@ -28,6 +26,7 @@ public class TreeGimmick : MonoBehaviour
         // GameManagerで設定された木の最大体力を初期値として代入
         currentHp = GameManager.maxHp;
 
+        // スプライトマスクの初期位置
         if (maskObjectLeft != null)
             maskObjectLeft.transform.localPosition = new Vector3(leftShift, 0, 0);
 
@@ -35,7 +34,7 @@ public class TreeGimmick : MonoBehaviour
             maskObjectRight.transform.localPosition = new Vector3(rightShift, 0, 0);
 
     }
-
+    
 
     // プレイヤーから呼び出すためのメソッド
     public void MaskGimmick(int layerInt)
@@ -86,8 +85,25 @@ public class TreeGimmick : MonoBehaviour
 
     }
 
+    // プロパティを使って、スプライトマスクの移動量が既定値以以上かどうかの判定を返す
+    public bool CheckOffsetLeft
+    {
+        get
+        {
+            // maxMoveDistanceの45%が移動量の最大、それ以上ならtrueを返す
+            if (nowOffsetLeft > maxMoveDistance * 0.45f) { return true; }
+            else { return false; }
+        }
+    }
 
-
+    public bool CheckOffsetRight
+    {
+        get
+        {
+            if (nowOffsetRight > maxMoveDistance * 0.45f) { return true; }
+            else { return false; }
+        }
+    }
 
     // Update is called once per frame
     void Update()
