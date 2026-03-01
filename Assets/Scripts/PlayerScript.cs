@@ -6,7 +6,7 @@ public class PlayerScript : MonoBehaviour
 {
     Rigidbody2D rbody;              // Rigidbody2D型の変数（自身の定義用）
     public float speed = 3.0f;      // 移動速度
-    private float axisH = 0.0f;     // x方向の入力
+    private float axisH = 0.0f;     // x方向の入力用
 
     private Animator animator;      // スプライト変更にAnimatorを使用する
     public SpriteRenderer spriteRenderer;       // 見た目を変えたい子オブジェクトのスプライト（斧）をインスペクターから指定
@@ -66,7 +66,7 @@ public class PlayerScript : MonoBehaviour
         {
             // Animatorの"Contact"トリガーを起動
             animator.SetTrigger("Contact");
-            // 連続で離れた時のトリガーが残らないようリセット（念のため）
+            // Contactlessのトリガーが残らないようリセット（念のため）
             animator.ResetTrigger("Contactless");
             isInArea = true;
             // currentTarget に相手情報を取得
@@ -74,13 +74,14 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
-    // コライダーから離れた瞬間に呼ばれる
+    // コライダーから離れた瞬間に呼ばれる、エリア内かの判定をfalseに
     private void OnTriggerExit2D(Collider2D other)
     {
         if (other.CompareTag("Tree"))
         {
             // "Contactless"トリガーを起動してIdleに戻す
             animator.SetTrigger("Contactless");
+            // Contactのトリガーが残らないようリセット（念のため）
             animator.ResetTrigger("Contact");
             isInArea = false;
             // 相手から離れたら、currentTargetを空にする
@@ -94,15 +95,15 @@ public class PlayerScript : MonoBehaviour
         // アタックボタンが押された瞬間　＆　伐採中ではない ＆ エリア内 ＆ ターゲットあり
         if (value.isPressed && !isLogging && isInArea && currentTarget != null)
         {
-            // マスクオブジェクトが規定の移動量を超えていれば（判定は向こうで行い済み）
-            if (treeGimmick.CheckOffsetLeft)
+            // 接触レイヤー名がTreeLeft且つ、マスクオブジェクトが規定の移動量を超えていれば（判定はあちらで行い済み）
+            if (currentTarget.layer == LayerMask.NameToLayer("TreeLeft") && treeGimmick.CheckOffsetLeft)
             {
-                // maskObjectRightを光らせる
+                // maskObjectRightを光らせたい
                 return;
             }
-            else if (treeGimmick.CheckOffsetRight)
+            else if (currentTarget.layer == LayerMask.NameToLayer("TreeRight") && treeGimmick.CheckOffsetRight)
             {
-                // maskObjectLeftを光らせる
+                // maskObjectLeftを光らせたい
                 return;
             }
             else
@@ -121,6 +122,8 @@ public class PlayerScript : MonoBehaviour
             }
         }
     }
+
+    // アニメーション中に発動させる
     public void OnLogging()
     {
         if (currentTarget != null)
@@ -134,6 +137,8 @@ public class PlayerScript : MonoBehaviour
         }
 
     }
+
+    // アニメーションの終了時に発動させる
     public void OnLoggingComplete()
     {
         // 状態をリセット

@@ -9,7 +9,8 @@ public class TreeGimmick : MonoBehaviour
     // スプライトマスクの初期位置を指定
     public float leftShift;
     public float rightShift;
-
+    // スプライトマスクを移動させる距離の最大値
+    public float maxMoveDistance;
     // スプライトマスクの移動した量
     private float nowOffsetLeft = 0.0f;
     private float nowOffsetRight = 0.0f;
@@ -17,8 +18,13 @@ public class TreeGimmick : MonoBehaviour
     // この木の現在の体力
     public float currentHp;
 
-    // スプライトマスクを移動させる距離の最大値
-    public float maxMoveDistance;
+    public GameObject treeVisual;       // 木の画像オブジェクト
+    public float fallSpeed = 10f;      // 倒れる速さ
+    private bool isFallen = false;
+    private float targetZAngle = 0f;    // 最終的な回転角度
+    private float currentFallSpeed = 0f; // 現在の落下速度
+    public float acceleration = 200f;   // 加速度（値が大きいほど早く加速する）
+    private Quaternion targetRotation = Quaternion.identity;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -42,13 +48,7 @@ public class TreeGimmick : MonoBehaviour
         // レイヤーの内容で条件分岐
         if (layerInt == LayerMask.NameToLayer("TreeLeft"))
         {
-            // maxMoveDistanceの45%が移動量の最大
-            if (nowOffsetLeft > maxMoveDistance * 0.45f)
-            {
-                // maskObjectRightを光らせる
-                return;
-            }
-            else if (maskObjectLeft != null)
+            if (maskObjectLeft != null)
             {
                 // 木へのダメージ処理
                 currentHp -= GameManager.axePower;
@@ -63,12 +63,7 @@ public class TreeGimmick : MonoBehaviour
         // Leftと同様に
         else if (layerInt == LayerMask.NameToLayer("TreeRight"))
         {
-            if (nowOffsetRight > maxMoveDistance * 0.45f)
-            {
-                //mashObjectLeftを光らせる
-                return;
-            }
-            else if (maskObjectRight != null)
+            if (maskObjectRight != null)
             {
                 currentHp -= GameManager.axePower;
 
@@ -80,8 +75,11 @@ public class TreeGimmick : MonoBehaviour
         // ダメージが85%以上で、木が倒れる
         if (currentHp < GameManager.maxHp * 0.15f)
         {
-            Debug.Log("木が倒れました！");
+            //Debug.Log("木が倒れました！");
+            // 倒れる処理。倒れるフラグが立ったら、Update 内で徐々に回転させる
+            Fall(layerInt);
         }
+
 
     }
 
@@ -105,9 +103,54 @@ public class TreeGimmick : MonoBehaviour
         }
     }
 
+    // 木が倒れる動き
+    private void Fall(int hitLayer)
+    {
+        if (isFallen) return; // 二重発動防止
+        isFallen = true;
+
+        // 叩いた方向によって倒れる向きを決める
+        // TreeLeftを叩いたら右に倒れる
+        if (hitLayer == LayerMask.NameToLayer("TreeLeft"))
+        {
+            targetZAngle = -90f;
+        }
+        else
+        {
+            targetZAngle = 90f;
+        }
+
+        // 算出した角度をQuaternionに変換して代入
+        targetRotation = Quaternion.Euler(0, 0, targetZAngle);
+
+    }
+
+
+
     // Update is called once per frame
     void Update()
     {
+        // 倒れるフラグが立っていたら回転させる
+        if (isFallen && treeVisual != null)
+        {
+            // 速度を加速させる
+            currentFallSpeed += acceleration * Time.deltaTime;
 
+            // 回転させる
+            treeVisual.transform.localRotation = Quaternion.RotateTowards(
+                treeVisual.transform.localRotation,     // 現在の角度
+                targetRotation,                         // 目標の角度（90度 or -90度）
+                currentFallSpeed * Time.deltaTime       // このフレームで動かす量
+            );
+
+            // 完了判定
+            // 現在の角度と目標の角度がどれくらい離れているかを計算
+            if (Quaternion.Angle(treeVisual.transform.localRotation, targetRotation) < 0.1f)
+            {
+                treeVisual.transform.localRotation = targetRotation; // 角度をぴったり合わせる
+                currentFallSpeed = 0f;
+
+            }
+        }
     }
 }

@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    // staticにすることで、どこからでも GameManager.axePower でアクセスできる
-    public static float axePower = 1.0f;        // 斧の強さ（木へのダメージ量）
+    // staticにすることで、どこからでも GameManager.でアクセスできる
+    public static float axePower = 10.0f;        // 斧の強さ（木へのダメージ量）
     public static float maxHp = 100.0f;     // 木の最大体力
     public static float playerPower = 5.0f;     // playerの力（斧を振る速さ）
 
