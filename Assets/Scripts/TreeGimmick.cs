@@ -52,6 +52,8 @@ public class TreeGimmick : MonoBehaviour
             {
                 // 木へのダメージ処理
                 currentHp -= GameManager.axePower;
+                // 切る音を鳴らす
+                SoundManager.instance.PlaySE(SEType.TreeHit, 0.1f);
                 // もしcurrentHPが0以下になったら、0になる
                 currentHp = Mathf.Max(currentHp, 0);
 
@@ -66,7 +68,7 @@ public class TreeGimmick : MonoBehaviour
             if (maskObjectRight != null)
             {
                 currentHp -= GameManager.axePower;
-
+                SoundManager.instance.PlaySE(SEType.TreeHit, 0.1f);
                 nowOffsetRight += maxMoveDistance * (GameManager.axePower / GameManager.maxHp);
                 maskObjectRight.transform.localPosition = new Vector3(-nowOffsetRight + rightShift, 0, 0);
             }
@@ -75,7 +77,9 @@ public class TreeGimmick : MonoBehaviour
         // ダメージが85%以上で、木が倒れる
         if (currentHp < GameManager.maxHp * 0.15f)
         {
-            //Debug.Log("木が倒れました！");
+            // 木の倒れる音を鳴らす
+            SoundManager.instance.PlaySE(SEType.TreeFall);
+            // Debug.Log("木が倒れました！");
             // 倒れる処理。倒れるフラグが立ったら、Update 内で徐々に回転させる
             Fall(layerInt);
         }
@@ -83,12 +87,12 @@ public class TreeGimmick : MonoBehaviour
 
     }
 
-    // プロパティを使って、スプライトマスクの移動量が既定値以以上かどうかの判定を返す
+    // プロパティを使って、スプライトマスクの移動量が既定値以上かどうかの判定を返す
     public bool CheckOffsetLeft
     {
         get
         {
-            // maxMoveDistanceの45%が移動量の最大、それ以上ならtrueを返す
+            // maxMoveDistanceの45%が移動量の最大、それ以外ならtrueを返す
             if (nowOffsetLeft > maxMoveDistance * 0.45f) { return true; }
             else { return false; }
         }
@@ -149,7 +153,16 @@ public class TreeGimmick : MonoBehaviour
             {
                 treeVisual.transform.localRotation = targetRotation; // 角度をぴったり合わせる
                 currentFallSpeed = 0f;
+                isFallen = false;
 
+                // 画面を揺らす（時間は0.3秒、強さは0.2）
+                if (CameraShake.instance != null)
+                {
+                    CameraShake.instance.Shake(0.3f, 0.2f);
+                }
+
+                // 着地音を鳴らす
+                SoundManager.instance.PlaySE(SEType.TreeLand);
             }
         }
     }
