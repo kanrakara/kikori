@@ -106,11 +106,23 @@ public class PlayerScript : MonoBehaviour
                 // maskObjectLeftを光らせたい
                 return;
             }
+            // 条件全てクリアで斧を振る
             else
             {
+                // 直接指定、相手の親のコンポーネント
                 TreeGimmick gimmick = currentTarget.GetComponentInParent<TreeGimmick>();
                 if (gimmick != null)
                 {
+                    // 斧を振る際、playerの向きを訂正する
+                    if (currentTarget.layer == LayerMask.NameToLayer("TreeLeft"))
+                    {
+                        transform.localScale = new Vector2(1, 1);
+                    }
+                    else
+                    {
+                        transform.localScale = new Vector2(-1, 1);
+                    }
+
                     isLogging = true;
                     axisH = 0;      // 移動を止める
                     rbody.linearVelocity = new Vector2(0, rbody.linearVelocity.y);
@@ -123,7 +135,7 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
-    // アニメーション中に発動させる
+    // アニメーション中、斧が木に当たったときに発動させる
     public void OnLogging()
     {
         if (currentTarget != null)

@@ -5,8 +5,10 @@ public class TreeGimmick : MonoBehaviour
     // 動かしたいスプライトマスクをインスペクターで指定
     public GameObject maskObjectLeft;
     public GameObject maskObjectRight;
-
-    // スプライトマスクの初期位置を指定
+    // 切り倒し時、スプライトマスクの親子関係を解除するため指定しておく
+    public MaskLeftControl maskLeftcontrol;
+    public MaskRightControl maskRightcontrol;
+        // スプライトマスクの初期位置を指定
     public float leftShift;
     public float rightShift;
     // スプライトマスクを移動させる距離の最大値
@@ -77,6 +79,11 @@ public class TreeGimmick : MonoBehaviour
         // ダメージが85%以上で、木が倒れる
         if (currentHp < GameManager.maxHp * 0.15f)
         {
+
+            // スプライトマスクの親子関係を解除し、下側の削り具合を確定させる
+            maskLeftcontrol.DetachLeftParent();
+            maskRightcontrol.DetachRightParent();
+
             // 木の倒れる音を鳴らす
             SoundManager.instance.PlaySE(SEType.TreeFall);
             // Debug.Log("木が倒れました！");
