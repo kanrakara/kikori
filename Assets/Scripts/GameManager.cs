@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
     // ゲーム開始時に初期化したい場合はここに書く
     void Awake()
     {
-        // 必要に応じて保存データから読み込む処理など
+        // 必要に応じて
     }
 
 

@@ -1,4 +1,3 @@
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -7,6 +6,7 @@ public class PlayerScript : MonoBehaviour
     Rigidbody2D rbody;              // Rigidbody2D型の変数（自身の定義用）
     public float speed = 3.0f;      // 移動速度
     private float axisH = 0.0f;     // x方向の入力用
+    PlayerInput input;              // PlayerInputコンポーネント
 
     private Animator animator;      // スプライト変更にAnimatorを使用する
     public SpriteRenderer spriteRenderer;       // 見た目を変えたい子オブジェクトのスプライト（斧）をインスペクターから指定
@@ -14,7 +14,15 @@ public class PlayerScript : MonoBehaviour
 
     public TreeGimmick treeGimmick;     // TreeGimmickの場所
     private bool isInArea = false;      // エリア内にいるかどうかのフラグ
+
     private GameObject currentTarget;
+    public GameObject triangleLeft;     // 黄色三角形（反対側に行くよう誘導用）の指定
+    public GameObject triangleRight;
+
+    private void Awake()
+    {
+        input = GetComponent<PlayerInput>();
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -31,6 +39,17 @@ public class PlayerScript : MonoBehaviour
         if (isLogging) return;      // 伐採中は移動入力を無視
         // 直接 Vector2 を受け取って、xの値を axisH に入れる
         axisH = value.Get<Vector2>().x;
+    }
+
+
+    //プレイヤー停止を準備しておく
+    public void GameStop()
+    {
+        rbody.linearVelocity = new Vector2(0, 0);
+
+        input.currentActionMap.Disable();       // いったんPlayerマップを無効化
+        input.SwitchCurrentActionMap("UI");     // アクションマップをUIマップに切り替え
+        input.currentActionMap.Enable();        // UIマップを有効化
     }
 
 
@@ -99,11 +118,15 @@ public class PlayerScript : MonoBehaviour
             if (currentTarget.layer == LayerMask.NameToLayer("TreeLeft") && treeGimmick.CheckOffsetLeft)
             {
                 // maskObjectRightを光らせたい
+                TriangleRightt script = triangleRight.GetComponent<TriangleRightt>();
+                script.CheckRight();
                 return;
             }
             else if (currentTarget.layer == LayerMask.NameToLayer("TreeRight") && treeGimmick.CheckOffsetRight)
             {
                 // maskObjectLeftを光らせたい
+                TriangleLeft script = triangleLeft.GetComponent<TriangleLeft>();
+                script.CheckLeft();
                 return;
             }
             // 条件全てクリアで斧を振る

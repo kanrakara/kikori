@@ -8,7 +8,7 @@ public class TreeGimmick : MonoBehaviour
     // 切り倒し時、スプライトマスクの親子関係を解除するため指定しておく
     public MaskLeftControl maskLeftcontrol;
     public MaskRightControl maskRightcontrol;
-        // スプライトマスクの初期位置を指定
+    // スプライトマスクの初期位置を指定
     public float leftShift;
     public float rightShift;
     // スプライトマスクを移動させる距離の最大値
@@ -27,6 +27,8 @@ public class TreeGimmick : MonoBehaviour
     private float currentFallSpeed = 0f; // 現在の落下速度
     public float acceleration = 200f;   // 加速度（値が大きいほど早く加速する）
     private Quaternion targetRotation = Quaternion.identity;
+
+    public GameObject playerObj;    // PlayerObjectを取っておく
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -79,6 +81,9 @@ public class TreeGimmick : MonoBehaviour
         // ダメージが85%以上で、木が倒れる
         if (currentHp < GameManager.maxHp * 0.15f)
         {
+
+            PlayerScript playerStop = playerObj.GetComponent<PlayerScript>();
+            playerStop.GameStop();
 
             // スプライトマスクの親子関係を解除し、下側の削り具合を確定させる
             maskLeftcontrol.DetachLeftParent();
