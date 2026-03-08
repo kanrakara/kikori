@@ -117,14 +117,14 @@ public class PlayerScript : MonoBehaviour
             // 接触レイヤー名がTreeLeft且つ、マスクオブジェクトが規定の移動量を超えていれば（判定はあちらで行い済み）
             if (currentTarget.layer == LayerMask.NameToLayer("TreeLeft") && treeGimmick.CheckOffsetLeft)
             {
-                // maskObjectRightを光らせたい
+                // maskObjectRightの部分を光らせる
                 TriangleRightt script = triangleRight.GetComponent<TriangleRightt>();
                 script.CheckRight();
                 return;
             }
             else if (currentTarget.layer == LayerMask.NameToLayer("TreeRight") && treeGimmick.CheckOffsetRight)
             {
-                // maskObjectLeftを光らせたい
+                // maskObjectLeftの部分を光らせる
                 TriangleLeft script = triangleLeft.GetComponent<TriangleLeft>();
                 script.CheckLeft();
                 return;
@@ -132,7 +132,7 @@ public class PlayerScript : MonoBehaviour
             // 条件全てクリアで斧を振る
             else
             {
-                // 直接指定、相手の親のコンポーネント
+                // 指定方法が、相手の親のコンポーネント
                 TreeGimmick gimmick = currentTarget.GetComponentInParent<TreeGimmick>();
                 if (gimmick != null)
                 {

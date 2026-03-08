@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 // 音の種類を定義、enumで列挙型とし、プログラム内で名前を打ち間違えた時点でエラーが出るようにする
 public enum BGMType { None, Title, Field }
-public enum SEType { TreeHit, TreeFall, TreeLand, UI_Click }
+public enum SEType { TreeHit, TreeFall, TreeLand, Clear }
 
 public class SoundManager : MonoBehaviour
 {

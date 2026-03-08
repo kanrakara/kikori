@@ -26,9 +26,13 @@ public class TreeGimmick : MonoBehaviour
     private float targetZAngle = 0f;    // 最終的な回転角度
     private float currentFallSpeed = 0f; // 現在の落下速度
     public float acceleration = 200f;   // 加速度（値が大きいほど早く加速する）
+    // 回転制御用、Quaternion.identityは、全て0に設定と同じ
     private Quaternion targetRotation = Quaternion.identity;
 
     public GameObject playerObj;    // PlayerObjectを取っておく
+    public GameObject uiManager;    // UIManagerも同様
+
+    private bool isCleared = false;  // エンディング重複実行防止用
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -44,7 +48,7 @@ public class TreeGimmick : MonoBehaviour
             maskObjectRight.transform.localPosition = new Vector3(rightShift, 0, 0);
 
     }
-    
+
 
     // プレイヤーから呼び出すためのメソッド
     public void MaskGimmick(int layerInt)
@@ -63,6 +67,8 @@ public class TreeGimmick : MonoBehaviour
 
                 // スプライトマスクを移動させる
                 nowOffsetLeft += maxMoveDistance * (GameManager.axePower / GameManager.maxHp);
+                // 最大移動量を超えないように
+                if (nowOffsetLeft > maxMoveDistance / 2) { nowOffsetLeft = maxMoveDistance / 2; }
                 maskObjectLeft.transform.localPosition = new Vector3(nowOffsetLeft + leftShift, 0, 0);
             }
         }
@@ -74,6 +80,7 @@ public class TreeGimmick : MonoBehaviour
                 currentHp -= GameManager.axePower;
                 SoundManager.instance.PlaySE(SEType.TreeHit, 0.1f);
                 nowOffsetRight += maxMoveDistance * (GameManager.axePower / GameManager.maxHp);
+                if (nowOffsetRight > maxMoveDistance / 2) { nowOffsetRight = maxMoveDistance / 2; }
                 maskObjectRight.transform.localPosition = new Vector3(-nowOffsetRight + rightShift, 0, 0);
             }
         }
@@ -167,7 +174,7 @@ public class TreeGimmick : MonoBehaviour
                 currentFallSpeed = 0f;
                 isFallen = false;
 
-                // 画面を揺らす（時間は0.3秒、強さは0.2）
+                // 画面を揺らす（時間は0.3秒、強さは0.2）staticで、直接呼び出せるようにしてある
                 if (CameraShake.instance != null)
                 {
                     CameraShake.instance.Shake(0.3f, 0.2f);
@@ -175,6 +182,28 @@ public class TreeGimmick : MonoBehaviour
 
                 // 着地音を鳴らす
                 SoundManager.instance.PlaySE(SEType.TreeLand);
+
+                // 報酬をプラス
+                GameManager.money += GameManager.remuneration;
+
+                // すでにクリア済みなら何もしない
+                if (isCleared) return;
+
+                // ゲームクリアチェック
+                if (GameManager.money >= GameManager.clearMoney)
+                {
+                    // 条件を満たせば
+                    isCleared = true;
+                    // クリア演出実行
+                    UIManager clear = uiManager.GetComponent<UIManager>();
+                    clear.GameClear();
+                }
+                else
+                {
+                // ResultUIを動作させる
+                UIManager resultOn = uiManager.GetComponent<UIManager>();
+                resultOn.ShowResultUI();
+                }
             }
         }
     }

@@ -5,12 +5,15 @@ public class GameManager : MonoBehaviour
     // staticにすることで、どこからでも GameManager.でアクセスできる
     public static float axePower = 10.0f;        // 斧の強さ（木へのダメージ量）
     public static float maxHp = 100.0f;     // 木の最大体力
+    public static int remuneration = 10000;     // 報酬
     public static float playerPower = 5.0f;     // playerの力（斧を振る速さ）
+    public static int money = 30000;        // 現在のお金
+    public static int clearMoney = 1000000;     // クリア条件
 
-    // ゲーム開始時に初期化したい場合はここに書く
+    // ゲーム開始時に初期化したいものがあれば
     void Awake()
     {
-        // 必要に応じて
+        
     }
 
 
