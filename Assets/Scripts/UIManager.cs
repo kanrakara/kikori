@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     public TextMeshProUGUI goldText;        // UIで表示用、Textオブジェクトをアタッチ
+    public Slider fundSlider;     // 同様に、スライダー用
 
     // 動かしたいUI(Result)　
     // RectTransformはUI専用のTransformで画面サイズが変わってもレイアウトを崩さない
@@ -36,6 +37,9 @@ public class UIManager : MonoBehaviour
     {
         // 毎フレーム、static変数の値を文字列にしてテキストに代入、3桁区切り表示ToString("N0")
         goldText.text = "所持金: " + GameManager.money.ToString("N0") + " 円";
+
+        // スライダーの表示を更新
+        fundSlider.value = GameManager.money;
 
         axeButton.interactable = (GameManager.money >= 30000);
         speedButton.interactable = (GameManager.money >= 5000);
@@ -96,8 +100,8 @@ public class UIManager : MonoBehaviour
         snowSystem.Play();
         //Debug.Log("雪が降り始めました");
         {
-            // 6秒(SE分の時間)待機
-            yield return new WaitForSecondsRealtime(6.0f);
+            // 7秒(SE分の時間)待機
+            yield return new WaitForSecondsRealtime(7.0f);
 
             // 雪を止める（新規の放出をストップし、残っている雪は消えるまで待つ）
             snowSystem.Stop();
