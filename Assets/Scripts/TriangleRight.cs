@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class TriangleRightt : MonoBehaviour
+public class TriangleRight : MonoBehaviour
 {
     public float fadeDuration = 2.0f;
     private SpriteRenderer sr;

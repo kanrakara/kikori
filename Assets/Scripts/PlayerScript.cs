@@ -118,7 +118,7 @@ public class PlayerScript : MonoBehaviour
             if (currentTarget.layer == LayerMask.NameToLayer("TreeLeft") && treeGimmick.CheckOffsetLeft)
             {
                 // maskObjectRightの部分を光らせる
-                TriangleRightt script = triangleRight.GetComponent<TriangleRightt>();
+                TriangleRight script = triangleRight.GetComponent<TriangleRight>();
                 script.CheckRight();
                 return;
             }
